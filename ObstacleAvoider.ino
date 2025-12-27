@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 int trigPin = 5, echoPin = 6;
-int L_IN1 = 8, L_IN2 = 9, R_IN1 = 10, R_IN2 = 11, servoPin = 3;
+int L_IN1 = 7, L_IN2 = 8, R_IN1 = 9, R_IN2 = 10, servoPin = 3, ENA = 6, ENB = 11;
 Servo scanServo;
 
 void setup() 
@@ -12,6 +12,8 @@ void setup()
   pinMode(L_IN2, OUTPUT);
   pinMode(R_IN1, OUTPUT);
   pinMode(R_IN2, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
   scanServo.attach(servoPin);
   scanServo.write(90); // face forward
 }
@@ -64,8 +66,10 @@ void forward()
 {
   digitalWrite(L_IN1, HIGH);
   digitalWrite(L_IN2, LOW);
+  analogWrite(ENA, 150);
   digitalWrite(R_IN1, HIGH);
   digitalWrite(R_IN2, LOW);
+  analogWrite(ENA, 150);
 }
 
 void turnLeft() 
@@ -74,12 +78,14 @@ void turnLeft()
   digitalWrite(L_IN2, LOW);
   digitalWrite(R_IN1, HIGH);
   digitalWrite(R_IN2, LOW);
+  analogWrite(ENB, 150);
 }
 
 void turnRight() 
 {
   digitalWrite(L_IN1, HIGH);
   digitalWrite(L_IN2, LOW);
+  analogWrite(ENA, 150);
   digitalWrite(R_IN1, LOW);
   digitalWrite(R_IN2, LOW);
 }
