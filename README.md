@@ -7,6 +7,19 @@ The robot is optimized for performance: it runs at higher speeds on straight sec
 
 To ensure reliability across different surfaces and lighting conditions, the robot performs a 6-second automatic calibration routine at startup. A buzzer melody confirms the completion of calibration and readiness of the system.
 
+## Hardware
+
+- Arduino UNO
+- 4x DC motor
+- 4x wheels
+- L298N Mptor Driver
+- 7 Channel IR Sensor Array
+- 2x 3.7V 2500 mAh Li ion battery
+- Breadboard
+- Passive Buzzer
+- Car Chassis
+- Jumper Wires
+
 ## Concepts Used
 
 ### 1. Automatic Sensor Calibration
@@ -40,11 +53,9 @@ This provides smooth and precise center detection instead of rough left/right de
 
 The computed error is fed into a PID controller:
 
-P (Proportional) → corrects based on how far the robot is from the line
-
-I (Integral) → compensates for long-term bias and steady-state error
-
-D (Derivative) → dampens oscillations and improves stability
+- P (Proportional) → corrects based on how far the robot is from the line
+- I (Integral) → compensates for long-term bias and steady-state error
+- D (Derivative) → dampens oscillations and improves stability
 
 The PID output continuously adjusts the left and right motor speeds to maintain accurate tracking.
 
@@ -52,21 +63,16 @@ The PID output continuously adjusts the left and right motor speeds to maintain 
 ### 4. Line Lost Detection & Recovery
 
 If none of the sensors detect the line, the robot identifies this as a “line lost” condition. It then:
-
-Reduces speed
-
-Turns in the last known direction of the line
-
-This increases the probability of quickly reacquiring the track instead of moving blindly.
+- Reduces speed
+- Turns in the last known direction of the line
+- This increases the probability of quickly reacquiring the track instead of moving blindly.
 
 ------
 ### 5. Dynamic Base Speed Control
 
 The robot adapts its base speed based on the magnitude of the error:
-
-Small error (straight line) → higher speed
-
-Large error (curves/turns) → reduced speed
+- Small error (straight line) → higher speed
+- Large error (curves/turns) → reduced speed
 
 This allows fast motion on straight sections while maintaining control and stability on sharp curves.
 
@@ -90,14 +96,10 @@ The PID output is constrained within the valid PWM range (0–255) before being 
 ### 4. Mechanical Stability
 
 The robot is designed to be:
-
-Lightweight
-
-Low center of mass
-
-Rigidly mounted sensor array
-
-Sensor placed slightly ahead of the wheels
+- Lightweight
+- Low center of mass
+- Rigidly mounted sensor array
+- Sensor placed slightly ahead of the wheels
 
 This improves responsiveness, reduces vibration-induced noise, and makes the control system more predictable.
 
@@ -105,14 +107,10 @@ This improves responsiveness, reduces vibration-induced noise, and makes the con
 ### 5. Comprehensive Testing Strategy
 
 The robot is tested on multiple track types:
-
-Straight paths
-
-S-curves
-
-Sharp turns
-
-Disturbance tests (manual pushes, partial line loss, etc.)
+- Straight paths
+- S-curves
+- Sharp turns
+- Disturbance tests (manual pushes, partial line loss, etc.)
 
 This ensures robustness and consistent performance under different conditions.
 
@@ -125,3 +123,28 @@ Automatic calibration is implemented so the same PID parameters can work across 
 ### 7. Safe PID Tuning Methodology
 
 PID tuning is performed at low motor speeds first to ensure stability. Once reliable behavior is achieved, the base speed is gradually increased to achieve high-speed performance.
+
+
+## Observations 
+
+| Sensor | min[i] | max[i] |
+|--------|--------|--------|
+| S0 | 29 | 239 |
+| S1 | 50 | 610 |
+| S2 | 58 | 649 |
+| S3 | 56 | 671 |
+| S4 | 64 | 704 |
+| S5 | 69 | 625 |
+| S6 | 55 | 671 |
+
+| kp | ki | kd | Observation |
+|--- |----|----|-------------|
+| 20 | 0 | 0 | Slight Oscillations |
+| | | | |
+| | | | |
+| | | | |
+| | | | |
+
+
+## Tuning Checklist
+
