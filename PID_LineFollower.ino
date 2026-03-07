@@ -13,7 +13,7 @@ int kp = 20;
 float ki = 0;
 int kd = 20;
 int baseSpeed = 130;
-int IN1 = , IN2 = , IN3 = , IN4 = , ENA = , ENB = ;
+int IN1 =9, IN2 =8, IN3 =7, IN4 =6, ENA =11, ENB =10;
 
 
 void setup() 
@@ -69,15 +69,23 @@ int readNormalize(int i)
 
 void loop() 
 {
+  nr=0;
+  dr=0;
   for(int i = 1; i < 7; i++)
     {
-      sensorValNor[i] = realNormalize(i);
+      sensorValNor[i] = readNormalize(i);
       nr = nr + weight[i]*sensorValNor[i];
       dr = dr + sensorValNor[i];
     }
-  error = nr/dr;
+  if(dr == 0) return;
+  
+  error = (float)nr/dr;
 
-  correction = kp*error + ki*integral + kd*derivative
+  integral = integral + error;
+  derivative = error - lastError;
+  lastError = error;
+
+  correction = kp*error + ki*integral + kd*derivative;
   move(correction);
 
   if(error < threshold)
@@ -89,6 +97,8 @@ void move(int cor)
 {
   int leftSpeed = baseSpeed + cor;
   int rightSpeed = baseSpeed - cor;
+  leftSpeed = constrain(leftSpeed, 0, 255);
+  rightSpeed = constrain(rightSpeed, 0, 255);
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);  
 }
@@ -96,6 +106,8 @@ void move(int cor)
 
 void lineLost()
 {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
 }
 
 
@@ -118,5 +130,4 @@ void calibrationDoneMelody()
   tone(buzzer, 262); delay(300);
   noTone(buzzer);
 }
-
 
